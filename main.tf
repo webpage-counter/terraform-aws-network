@@ -80,7 +80,7 @@ resource "aws_route_table_association" "tf_public_assoc" {
 resource "aws_route_table_association" "tf_private_assoc" {
   count          = length(aws_subnet.tf_private_subnet)
   subnet_id      = aws_subnet.tf_private_subnet[count.index].id
-  route_table_id = aws_route_table.tf_private_rt.id
+  route_table_id = aws_default_route_table.tf_private_rt.id
 }
 
 resource "aws_security_group" "tf_public_sg" {
