@@ -21,5 +21,5 @@ output "vpc_id" {
 }
 
 output "natgw" {
-  value = aws_nat_gateway.gw.id
+  value = aws_nat_gateway.gw.*.id
 }
