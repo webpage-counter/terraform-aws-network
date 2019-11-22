@@ -104,13 +104,14 @@ resource "aws_security_group" "tf_public_sg" {
 }
 
 resource "aws_eip" "nat" {
+  count   = length(aws_nat_gateway.gw)
   vpc = true
   depends_on                = [aws_internet_gateway.tf_internet_gateway]
 }
 
 resource "aws_nat_gateway" "gw" {
   count         = length(aws_subnet.tf_private_subnet)
-  allocation_id = aws_eip.nat.id
+  allocation_id = aws_eip.nat[count.index].id
   subnet_id     = aws_subnet.tf_private_subnet[count.index].id
 
   depends_on = [aws_internet_gateway.tf_internet_gateway]
