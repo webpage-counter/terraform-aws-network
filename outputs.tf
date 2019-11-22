@@ -16,3 +16,6 @@ output "vpc_id" {
   value = aws_vpc.tf_vpc.id
 }
 
+output "natgw" {
+  value = aws_nat_gateway.gw.id
+}
