@@ -39,7 +39,7 @@ resource "aws_route_table" "tf_private_rt" {
   count = length(aws_subnet.tf_private_subnet)
   route {
     cidr_block = "0.0.0.0/0"
-    gateway_id = aws_nat_gateway.gw[count.index].id
+    nat_gateway_id = aws_nat_gateway.gw[count.index].id
   }
 
   tags = {
