@@ -1,7 +1,7 @@
 #------Networking/outputs.tf
 
 output "public_subnets" {
-  value = aws_subnet.tf_public_subnet.*.id
+  value = aws_subnet.tf_public_subnet.id
 }
 
 output "private_subnets" {
@@ -13,7 +13,7 @@ output "public_sg" {
 }
 
 output "subnet_ips" {
-  value = aws_subnet.tf_public_subnet.*.cidr_block
+  value = aws_subnet.tf_public_subnet.cidr_block
 }
 
 output "vpc_id" {
@@ -21,5 +21,5 @@ output "vpc_id" {
 }
 
 output "natgw" {
-  value = aws_nat_gateway.gw.*.id
+  value = aws_nat_gateway.gw.id
 }
