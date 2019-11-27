@@ -51,7 +51,7 @@ resource "aws_subnet" "tf_public_subnet" {
   vpc_id                  = aws_vpc.tf_vpc.id
   cidr_block              = var.public_cidrs
   map_public_ip_on_launch = false
-  availability_zone       = data.aws_availability_zones.available.names
+  availability_zone       = data.aws_availability_zones.available.names[0]
 
   tags = {
     Name = "tf_public"
