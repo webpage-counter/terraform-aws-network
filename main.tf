@@ -39,7 +39,7 @@ resource "aws_route_table" "tf_private_rt" {
   count = length(aws_subnet.tf_private_subnet)
   route {
     cidr_block = "0.0.0.0/0"
-    nat_gateway_id = aws_nat_gateway.gw[count.index].id
+    nat_gateway_id = aws_nat_gateway.gw.id
   }
 
   tags = {
@@ -48,11 +48,10 @@ resource "aws_route_table" "tf_private_rt" {
 }
 
 resource "aws_subnet" "tf_public_subnet" {
-  count                   = 2
   vpc_id                  = aws_vpc.tf_vpc.id
-  cidr_block              = var.public_cidrs[count.index]
+  cidr_block              = var.public_cidrs
   map_public_ip_on_launch = false
-  availability_zone       = data.aws_availability_zones.available.names[count.index]
+  availability_zone       = data.aws_availability_zones.available.names
 
   tags = {
     Name = "tf_public_${count.index + 1}"
@@ -72,8 +71,7 @@ resource "aws_subnet" "tf_private_subnet" {
 }
 
 resource "aws_route_table_association" "tf_public_assoc" {
-  count          = length(aws_subnet.tf_public_subnet)
-  subnet_id      = aws_subnet.tf_public_subnet[count.index].id
+  subnet_id      = aws_subnet.tf_public_subnet.id
   route_table_id = aws_route_table.tf_public_rt.id
 }
 
@@ -104,15 +102,13 @@ resource "aws_security_group" "tf_public_sg" {
 }
 
 resource "aws_eip" "nat" {
-  count   = length(aws_subnet.tf_private_subnet)
   vpc = true
   depends_on                = [aws_internet_gateway.tf_internet_gateway]
 }
 
 resource "aws_nat_gateway" "gw" {
-  count         = length(aws_subnet.tf_private_subnet)
-  allocation_id = aws_eip.nat[count.index].id
-  subnet_id     = aws_subnet.tf_private_subnet[count.index].id
+  allocation_id = aws_eip.nat.id
+  subnet_id     = aws_subnet.tf_public_subnet.id
 
   depends_on = [aws_internet_gateway.tf_internet_gateway]
 }
