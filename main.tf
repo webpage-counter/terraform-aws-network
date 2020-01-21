@@ -23,7 +23,7 @@ resource "aws_internet_gateway" "tf_internet_gateway" {
 
 resource "aws_route_table" "tf_public_rt" {
   vpc_id = aws_vpc.tf_vpc.id
-  count = length(aws_subnet.tf_public_subnet)
+  count  = length(aws_subnet.tf_public_subnet)
   route {
     cidr_block = "0.0.0.0/0"
     gateway_id = aws_internet_gateway.tf_internet_gateway.id
@@ -36,9 +36,9 @@ resource "aws_route_table" "tf_public_rt" {
 
 resource "aws_route_table" "tf_private_rt" {
   vpc_id = aws_vpc.tf_vpc.id
-  count = length(aws_subnet.tf_private_subnet)
+  count  = length(aws_subnet.tf_private_subnet)
   route {
-    cidr_block = "0.0.0.0/0"
+    cidr_block     = "0.0.0.0/0"
     nat_gateway_id = aws_nat_gateway.gw.id
   }
 
@@ -104,13 +104,13 @@ resource "aws_security_group" "tf_public_sg" {
 }
 
 resource "aws_eip" "nat" {
-  vpc = true
-  depends_on                = [aws_internet_gateway.tf_internet_gateway]
+  vpc        = true
+  depends_on = [aws_internet_gateway.tf_internet_gateway]
 }
 
 resource "aws_nat_gateway" "gw" {
   allocation_id = aws_eip.nat.id
-  subnet_id     = aws_subnet.tf_public_subnet.id
+  subnet_id     = aws_subnet.tf_public_subnet[0].id
 
   depends_on = [aws_internet_gateway.tf_internet_gateway]
 }
