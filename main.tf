@@ -48,13 +48,14 @@ resource "aws_route_table" "tf_private_rt" {
 }
 
 resource "aws_subnet" "tf_public_subnet" {
+  count                   = 4
   vpc_id                  = aws_vpc.tf_vpc.id
-  cidr_block              = var.public_cidrs
+  cidr_block              = var.public_cidrs[count.index]
   map_public_ip_on_launch = false
-  availability_zone       = data.aws_availability_zones.available.names[0]
+  availability_zone       = data.aws_availability_zones.available.[count.index]
 
   tags = {
-    Name = "tf_public"
+    Name = "tf_public_${count.index + 1}"
   }
 }
 
