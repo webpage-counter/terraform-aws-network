@@ -23,7 +23,7 @@ resource "aws_internet_gateway" "tf_internet_gateway" {
 
 resource "aws_route_table" "tf_public_rt" {
   vpc_id = aws_vpc.tf_vpc.id
-
+  count = length(aws_subnet.tf_public_subnet)
   route {
     cidr_block = "0.0.0.0/0"
     gateway_id = aws_internet_gateway.tf_internet_gateway.id
@@ -72,8 +72,9 @@ resource "aws_subnet" "tf_private_subnet" {
 }
 
 resource "aws_route_table_association" "tf_public_assoc" {
-  subnet_id      = aws_subnet.tf_public_subnet.id
-  route_table_id = aws_route_table.tf_public_rt.id
+  count          = length(aws_subnet.tf_public_subnet)
+  subnet_id      = aws_subnet.tf_public_subnet[count.index].id
+  route_table_id = aws_route_table.tf_public_rt[count.index].id
 }
 
 resource "aws_route_table_association" "tf_private_assoc" {
